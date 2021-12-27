@@ -1,0 +1,25 @@
+#!/binbash
+echo line1
+input="/home/vagrant/example.properties"
+echo line2
+while IFS= read -r line
+echo line3
+do
+echo "$line"
+srcstring=$(echo "$line" | cut -d '=' -f1)
+var="$(grep -rnw /home/vagrant/setup -e $srcstring | wc -l)"
+echo $var
+current=$line
+if [ $var -gt 0 ]
+then echo match
+match=$(echo "$line" | cut -d '=' -f2)
+source=$(echo "$line" | cut -d '=' -f1)
+echo $match
+filenames=$(grep -RiIl $source /home/vagrant/setup)
+echo $filenames
+$(sed -i "s+${source}+${match}+g" $filenames)
+else
+echo "No Replacement"$i
+fi
+exit 0
+done < "$input"
